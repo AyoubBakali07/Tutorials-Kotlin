@@ -112,7 +112,7 @@ fun ContactInfo(label: String, value: String, onClick: () -> Unit) {
             .padding(vertical = 15.dp)
     ) {
         Text(text = "$label: ", fontWeight = FontWeight.Bold)
-        Text(text = value, color = Color.blue)
+        Text(text = value, color = androidx.compose.ui.graphics.Color.Blue)
     }
 }
 
