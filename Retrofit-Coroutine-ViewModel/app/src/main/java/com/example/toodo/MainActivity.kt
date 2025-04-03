@@ -20,6 +20,8 @@ import androidx.compose.material.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.toodo.ui.theme.ToodoTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -27,27 +29,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTodo()
-
-
+            
         }
     }
 }
 @Composable
-fun MyTodo() {
-    var title by remember { mutableStateOf("Chargement...") }
+fun MyTodo(viewModel: TodoViewModel = viewModel()) {
+    // Observe le StateFlow et met à jour l'UI en cas de changement
+    val title by viewModel.todoTitle.collectAsState()
 
-    // Launch a coroutine to perform the network call asynchronously
-    LaunchedEffect(Unit) {
-        try {
-            // Execute the API call on the IO dispatcher
-            val todo = withContext(Dispatchers.IO) { RetrofitClient.api.getTodo() }
-            title = todo.title
-        } catch (e: Exception) {
-            title = "Erreur : ${e.message}"
-        }
-    }
-
-    // Simple UI displaying the fetched title
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier

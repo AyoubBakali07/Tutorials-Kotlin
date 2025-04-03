@@ -1,6 +1,6 @@
 package com.example.toodo
 
- data class todo (
+ data class Todo (
     val id: Int,
     val title: String,
     val completed: Boolean
