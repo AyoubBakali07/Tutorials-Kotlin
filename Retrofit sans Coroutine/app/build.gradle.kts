@@ -62,7 +62,9 @@ dependencies {
 
     // Add Compose ViewModel dependency
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

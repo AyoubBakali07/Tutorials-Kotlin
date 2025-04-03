@@ -13,6 +13,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.toodo.ui.theme.ToodoTheme
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import androidx.compose.material.*
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,22 +27,39 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
-fun MyTodo(viewModel: CounterViewModel = viewModel()) {
-    val compteur by viewModel.counter.collectAsState()
+fun MyTodo() {
+    var titre by remember { mutableStateOf("Chargement...") }
 
+    // Appel Retrofit asynchrone via enqueue (callback classique)
+    LaunchedEffect(Unit) {
+        val call = RetrofitClient.api.getTodo()
+        call.enqueue(object : Callback<todo> {
+            override fun onResponse(call: Call<todo>, response: Response<todo>) {
+                if (response.isSuccessful) {
+                    val todo = response.body()
+                    titre = todo?.title ?: "Réponse vide"
+                } else {
+                    titre = "Erreur HTTP ${response.code()}"
+                }
+            }
+
+            override fun onFailure(call: Call<todo>, t: Throwable) {
+                titre = "Erreur réseau : ${t.message}"
+            }
+        })
+    }
+
+    // Interface utilisateur simple avec Compose
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Compteur : $compteur", style = MaterialTheme.typography.headlineMedium)
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { viewModel.increment() }) {
-                Text("Incrémenter")
-            }
+            Text(text = titre, style = MaterialTheme.typography.titleLarge)
         }
     }
 }
