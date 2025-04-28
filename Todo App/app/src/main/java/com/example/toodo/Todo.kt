@@ -14,6 +14,7 @@ data class Todo(
     @SerializedName("userId")    val userId: Int,
     @SerializedName("id")        val id: Int,
     @SerializedName("title")     val title: String,
+    @SerializedName("status")   val status: String,
     @SerializedName("completed") val completed: Boolean,
     @Transient                   val priority: Priority = Priority.MEDIUM
 )
