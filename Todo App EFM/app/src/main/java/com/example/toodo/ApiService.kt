@@ -20,4 +20,3 @@ interface ApiService {
     @DELETE("todos/{id}")
     suspend fun deleteTodo(@Path("id") id: Int): Unit
 }
-
